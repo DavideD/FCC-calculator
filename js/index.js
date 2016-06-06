@@ -1,0 +1,1 @@
+// This is the Javascript for the FCC calculator
