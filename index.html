@@ -1,27 +1,122 @@
 <!DOCTYPE html>
-<html >
-  <head>
-    <meta charset="UTF-8">
-    <title>Calculator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    
-    
-        <link rel="stylesheet" href="css/style.css">
+<html>
 
-    
-    
-    
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
-  <body>
+<body>
 
-    <!-- THis is HTML for the FCC calculator-->
-    
-        <script src="js/index.js"></script>
+  <!-- This is the beginning of the HTML for the FCC calculator-->
+  <!-- Using this layout http://www.guidingtech.com/assets/postimages/2013/12/Mac-Calculator-Basic.png-->
+  <div class="calculator">
+    <div class="screen">
+    </div>
+    <div class="buttons">
+      <table>
 
-    
-    
-    
-  </body>
+        <tr>
+          <td>
+            <div class="button memory" id="MC">MC</div>
+          </td>
+          <td>
+            <div class="button memory" id="Mplus">M+</div>
+          </td>
+          <td>
+            <div class="button memory" id="Mminus">M-</div>
+          </td>
+          <td>
+            <div class="button memory" id="MR">MR</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="button clear" id="CE">CE</div>
+          </td>
+          <td>
+            <div class="button clear" id="C">C</div>
+          </td>
+          <td>
+            <div class="button percent" id="percent">%</div>
+          </td>
+          <td>
+            <div class="button plusmn" id="plusmn">&plusmn;</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="button digit" id="d7">7</div>
+          </td>
+          <td>
+            <div class="button digit" id="d8">8</div>
+          </td>
+          <td>
+            <div class="button digit" id="d9">9</div>
+          </td>
+          <td>
+            <div class="button operator" id="div">/</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="button digit" id="d4">4</div>
+          </td>
+          <td>
+            <div class="button digit" id="d5">5</div>
+          </td>
+          <td>
+            <div class="button digit" id="d6">6</div>
+          </td>
+          <td>
+            <div class="button operator" id="mul">*</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="button digit" id="d1">1</div>
+          </td>
+          <td>
+            <div class="button digit" id="d2">2</div>
+          </td>
+          <td>
+            <div class="button digit" id="d3">3</div>
+          </td>
+          <td>
+            <div class="button operator" id="min">-</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="button digit" id="d0">0</div>
+          </td>
+          <td>
+            <div class="button digit dot" id="dot">.</div>
+          </td>
+          <td>
+            <div class="button equal" id="equal">=</div>
+          </td>
+          <td>
+            <div class="button operator" id="plu">+</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="debug">
+    <p>Key pressed: <span class="keyPressed"></span></p>
+  </div>
+
+  <!-- This is the end of the HTML for the FCC calculator-->
+  <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+  <script src="js/index.js"></script>
+
+
+
+
+</body>
+
 </html>

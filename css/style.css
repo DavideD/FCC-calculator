@@ -1,1 +1,29 @@
 /* This is CSS for the FCC calculator */
+.button {
+  padding: 10px;
+  margin: 10px;
+  border: solid black 1px;
+  width: 4ch;
+}
+
+.button:hover {
+  color: white;
+  background-color: black;
+}
+
+.active {
+  color: white;
+  background-color: grey;
+}
+
+.screen {
+  border: solid black 1px;
+  height: 3em;
+  width: 300px;
+  margin: 10px;
+}
+
+td {
+  margin: 0;
+  padding: 0;
+}
