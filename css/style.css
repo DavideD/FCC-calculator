@@ -1,5 +1,7 @@
 /* This is CSS for the FCC calculator */
 .button {
+  position: relative;
+  display: inline-block;
   padding: 10px;
   margin: 10px;
   border: solid black 1px;
@@ -9,6 +11,19 @@
 .button:hover {
   color: white;
   background-color: black;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: red;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 0;
+}
+
+.button:hover .tooltip {
+    visibility: visible;
 }
 
 .active,

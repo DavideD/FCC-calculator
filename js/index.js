@@ -7,7 +7,7 @@ var previousKey = "", // Prevent keyboard repeat
                   "e": "Mminus", "E": "Mminus",
                   "r": "MR", "R": "MR",
                   "Delete": "CE", "Backspace": "CE",
-                  "Escape": "C",
+                  "Escape": "CA",
                   "%": "percent",
                   "n": "plusmn", "N": "plusmn",
                   "0": "d0", "1": "d1", "2": "d2", "3": "d3", "4": "d4",
@@ -36,6 +36,10 @@ $(document).keyup(function() {
   previousKey = "";
 })
 
+$(document).ready(function() {
+  addToolTips();
+})
+
 // Blinks the key when pressed
 $.fn.blink = function() {
   this.addClass("active")
@@ -48,4 +52,28 @@ $.fn.blink = function() {
 // Returns the ID of the element called by the keyboard shortcut
 var $keyToId = function(key) {
   return $('#' + keyIdTable[key]);
+}
+
+// Adds the keyboard tooltips
+var addToolTips = function() {
+  var idKeyTable = createTooltips(keyIdTable);
+  for (var id in idKeyTable) {
+    $("#" + id).append("<span class='tooltip'>" + idKeyTable[id] + "</span>");
+  }
+}
+
+// Reverts key/value relationships. Handles multiple values and lower case single keys
+var createTooltips = function(object) {
+  var out = {};
+  var v;
+  for(var k in object) {
+    v = object[k];
+    if (v.length == 1) { // Keeps "Escape", etc. upper case
+      v = v.toLowerCase();
+    }
+    if (out[v] === undefined) {
+      out[v] = k.slice(0, 3);
+    }
+  }
+  return out;
 }
