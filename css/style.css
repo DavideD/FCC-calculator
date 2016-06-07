@@ -11,7 +11,8 @@
   background-color: black;
 }
 
-.active {
+.active,
+.button:active {
   color: white;
   background-color: grey;
 }
