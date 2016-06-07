@@ -1,4 +1,10 @@
 /* This is CSS for the FCC calculator */
+/* Font from http://www.keshikan.net/fonts-e.html */
+@font-face {
+  font-family: 'Segments';
+  src: url('/font/DSEG7Classic-Italic.woff');
+}
+
 .button {
   position: relative;
   display: inline-block;
@@ -33,10 +39,27 @@
 }
 
 .screen {
+  font-family: 'Segments', Fallback, monospace;
+  position: relative;
   border: solid black 1px;
-  height: 3em;
-  width: 300px;
+  height: 2em;
+  width: 310px;
   margin: 10px;
+  line-height: 2em;
+  font-size: 36px;
+}
+
+.screen-background {
+  position: absolute;
+  right: 10px;
+  color: black;
+  opacity: 0.2;
+}
+
+.screen-text {
+  position: absolute;
+  right: 10px;
+  color: black
 }
 
 td {
