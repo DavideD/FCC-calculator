@@ -14,7 +14,8 @@ var previousKey = "", // Prevent keyboard repeat
                   "5": "d5", "6": "d6", "7": "d7", "8": "d8", "9": "d9",
                   "/": "div", "*": "mul", "-": "min", "+": "plu",
                   ".": "dot",
-                  "=": "equal", "Enter": "equal"};
+                  "=": "equal", "Enter": "equal"},
+    $screenText = $(".screen-text");
 
 
 // Keyboard handler
@@ -28,12 +29,18 @@ $(document).keydown(function(event) {
   }
   previousKey = event.key;
 
-  // Blinking of the appropriate key
-  $keyToId(event.key).blink();
+  // Blinking of the appropriate key & Process
+  $keyToId(event.key)
+    .blink()
+    .processInput();
 });
 
 $(document).keyup(function() {
-  previousKey = "";
+  previousKey = ""; // Allows multiple keys pressed at the same time
+})
+
+$(".calculator").click(function(event) {
+  $(event.target).processInput();
 })
 
 $(document).ready(function() {
@@ -47,7 +54,28 @@ $.fn.blink = function() {
       .queue(function() {
         $(this).removeClass("active").dequeue();
       });
+  return this;
 };
+
+// Main input handler
+$.fn.processInput = function() {
+  var buttonId = this.attr("id");
+  // Handle digits and dot
+  if (this.hasClass('digit')) {
+    // Decimal dot
+    if (this.hasClass('dot')) {
+      if ($screenText.text().indexOf('.') == -1) {
+        $screenText.append('.');
+      }
+      return;
+    }
+    // Make sure there's no more than 8 digits
+    if ($screenText.text() == "" || $screenText.text().match(/[0-9]/g).length < 8) {
+      // Display the digits
+      $screenText.append(buttonId.slice(-1));
+    }
+  }
+}
 
 // Returns the ID of the element called by the keyboard shortcut
 var $keyToId = function(key) {
