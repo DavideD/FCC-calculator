@@ -15,7 +15,10 @@ var previousKey = "", // Prevent keyboard repeat
                   "/": "div", "*": "mul", "-": "min", "+": "plu",
                   ".": "dot",
                   "=": "equal", "Enter": "equal"},
-    $screenText = $(".screen-text");
+    $screenText = $(".screen-text"),
+    operator = "",
+    firstOperand = "",
+    lastPressed = "";
 
 
 // Keyboard handler
@@ -59,21 +62,102 @@ $.fn.blink = function() {
 
 // Main input handler
 $.fn.processInput = function() {
+  // Parse decimal dot
+  if (this.hasClass('dot')) {
+    parseDot();
+    return;
+  }
+  // Parse sign change
+  if (this.hasClass('plusmn')) {
+    parsePlusmn();
+    return;
+  }
   var buttonId = this.attr("id");
-  // Handle digits and dot
+  // Parse CE and C
+  if (this.hasClass('clear')) {
+    parseClear(buttonId);
+    return;
+  }
+  // Parse digits
   if (this.hasClass('digit')) {
-    // Decimal dot
-    if (this.hasClass('dot')) {
-      if ($screenText.text().indexOf('.') == -1) {
-        $screenText.append('.');
-      }
-      return;
+    parseDigit(buttonId);
+    return;
+  }
+  if (this.hasClass('operator')) {
+    parseOperator(buttonId);
+    return;
+  }
+}
+
+////////////Parsing functions///////////////////
+var parseClear = function(id) {
+  $screenText.text("0");
+  if (id == "CE") {
+    lastPressed = operator; // Allows for double operator action
+  } else {
+    operator = "";
+    firstOperand = "";
+    lastPressed = "";
+  }
+}
+
+var parseCA = function() {
+  $screenText.text("0");
+  operator = "";
+  firstOperand = "";
+  lastPressed = "";
+}
+
+var parseDot = function() {
+  if ($screenText.text().indexOf('.') == -1) {
+    $screenText.append('.');
+  }
+  lastPressed = ".";
+}
+
+var parseDigit = function(id) {
+  // Handle the original zero
+  if ($screenText.text() == "0") {
+    $screenText.text(id.slice(-1));
+  } else if ($screenText.text().match(/[0-9]/g).length < 8) {
+    // If less than 8 digits, display the digits
+    $screenText.append(id.slice(-1));
+  }
+  lastPressed = "digit";
+}
+
+var parsePlusmn = function() {
+  var screenText = $screenText.text();
+  if (screenText != "0") {
+    if (screenText.slice(0, 1) == "-") {
+      $screenText.text(screenText.slice(1));
+    } else {
+      $screenText.text("-" + screenText);
     }
-    // Make sure there's no more than 8 digits
-    if ($screenText.text() == "" || $screenText.text().match(/[0-9]/g).length < 8) {
-      // Display the digits
-      $screenText.append(buttonId.slice(-1));
+  }
+  // No need to update lastPressed
+}
+
+var parseOperator = function(id) {
+  if (operator == id) {
+    // Double operator action
+    operator = "2" + operator;
+  } else {
+    // TODO: Progress operation - Could be that operation has to be executed
+  }
+
+  clearTrailingZeroes();
+  lastPressed = "operator";
+}
+//////////End of parsing functions
+
+var clearTrailingZeroes = function() {
+  if ($screenText.text().indexOf('.') != -1) {
+    var screenText = $screenText.text();
+    while(screenText.slice(-1) == "0") {
+      screenText = screenText.slice(0, -1);
     }
+    $screenText.text(screenText);
   }
 }
 
