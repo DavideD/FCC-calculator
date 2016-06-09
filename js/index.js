@@ -3,8 +3,8 @@
 
 var previousKey = "", // Prevent keyboard repeat
     keyIdTable = {"q": "MC", "Q": "MC",
-                  "w": "Mplus", "W": "Mplus",
-                  "e": "Mminus", "E": "Mminus",
+                  "w": "Mplu", "W": "Mplu",
+                  "e": "Mmin", "E": "Mmin",
                   "r": "MR", "R": "MR",
                   "Delete": "CE", "Backspace": "CE",
                   "Escape": "CA",
@@ -19,8 +19,8 @@ var previousKey = "", // Prevent keyboard repeat
     operator = "",
     firstOperand = "",
     lastPressed = "", // Values can be "digit", ".", "operator", "result"
-    isOverflow = false;
-
+    isOverflow = false,
+    memory = 0;
 
 // Keyboard handler
 $(document).keydown(function(event) {
@@ -66,7 +66,7 @@ $.fn.processInput = function() {
   var buttonId = this.attr("id");
   // Parse CE and C
   if (this.hasClass('clear')) {
-    parseClear(buttonId);
+    parseClear("CA");
     return;
   }
   if (!isOverflow) {
@@ -93,13 +93,21 @@ $.fn.processInput = function() {
       parseEqual();
       return;
     }
+    if (this.hasClass('memory')) {
+      parseMemory(buttonId);
+      return;
+    }
+    if (this.hasClass('percent')) {
+      parsePercent();
+      return;
+    }
   }
 }
 
 ////////////Parsing functions///////////////////
 var parseClear = function(id) {
   $screenText.text("0");
-  if (id == "CA" || isOverflow) {
+  if (id == "CA") {
     operator = "";
     firstOperand = "";
     lastPressed = "";
@@ -109,7 +117,6 @@ var parseClear = function(id) {
 
 var parseCA = function() {
   $screenText.text("0");
-  operator = "";
   firstOperand = "";
   lastPressed = "";
 }
@@ -120,6 +127,7 @@ var parseDot = function() {
   }
   if ($screenText.text().indexOf('.') == -1) {
     $screenText.append('.');
+    operator = "";
   }
   lastPressed = ".";
 }
@@ -187,6 +195,11 @@ var parseEqual = function() {
         $screenText.text(calculate());
       }
       break;
+    case "result":
+      if (operator[0] == "2"){
+        // Repeat operationot
+        $screenText.text(calculate());
+      }
   }
   clearTrailingZeroes();
   if (operator[0] != 2) {
@@ -196,29 +209,77 @@ var parseEqual = function() {
   }
   lastPressed = "result";
 }
+
+var parseMemory = function(id) {
+  switch (id) {
+    case "MC":
+      memory = 0;
+      break;
+    case "Mplu":
+    case "Mmin":
+      var newVal = operatorFn(id.slice(-3))(memory,
+                                            parseFloat($screenText.text()));
+      checkForOverflow(newVal);
+      if (isOverflow) {
+        displayError();
+      } else {
+        memory = newVal;
+      }
+      break;
+    case "MR":
+      parseClear("CA");
+      $screenText.text(resultToText(memory));
+      clearTrailingZeroes();
+      break;
+  }
+  lastPressed = "result";
+}
+
+var parsePercent = function() {
+  var value = parseFloat($screenText.text());
+  if (firstOperand == "") {
+    value = value * 0.01;
+  } else {
+    value = value * 0.01 * parseFloat(firstOperand);
+  }
+  $screenText.text(resultToText(value));
+  clearTrailingZeroes();
+  lastPressed = "digit";
+}
 //////////End of parsing functions
 
 // Process operands and operator
 var calculate = function() {
   var secondOperand = $screenText.text();
-  var opFn;
-  switch (operator.slice(-3)) { // Takes into account double operator
-    case "plu":
-    opFn = function (lhs, rhs) {return lhs + rhs};
-    break;
-    case "min":
-    opFn = function (lhs, rhs) {return lhs - rhs};
-    break;
-    case "mul":
-    opFn = function (lhs, rhs) {return lhs * rhs};
-    break;
-    case "div":
-    opFn = function (lhs, rhs) {return lhs / rhs}
-    break;
-  }
-  var result = opFn(parseFloat(firstOperand), parseFloat(secondOperand));
+  var result = operatorFn(operator.slice(-3))(parseFloat(firstOperand),
+                                              parseFloat(secondOperand));
   checkForOverflow(result);
   return resultToText(result);
+}
+
+var operatorFn = function(operator) {
+  switch (operator) { // Takes into account double operator
+    case "plu":
+      return function (lhs, rhs) {return lhs + rhs};
+      break;
+    case "min":
+      return function (lhs, rhs) {return lhs - rhs};
+      break;
+    case "mul":
+      return function (lhs, rhs) {return lhs * rhs};
+      break;
+    case "div":
+      return function (lhs, rhs) {return lhs / rhs}
+      break;
+    default:
+      return;
+  }
+}
+
+// Display an E at the end of the display
+var displayError = function() {
+  var text = $screenText.text();
+  $screenText.text(text.slice(0, -1) + "E");
 }
 
 // Convert result to text and deals with overflow
