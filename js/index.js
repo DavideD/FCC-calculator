@@ -18,7 +18,7 @@ var previousKey = "", // Prevent keyboard repeat
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
-    lastPressed = "",
+    lastPressed = "", // Values can be "digit", ".", "operator", "result"
     isOverflow = false;
 
 
@@ -89,6 +89,10 @@ $.fn.processInput = function() {
       parseOperator(buttonId);
       return;
     }
+    if (this.hasClass('equal')) {
+      parseEqual();
+      return;
+    }
   }
 }
 
@@ -121,7 +125,7 @@ var parseDot = function() {
 }
 
 var parseDigit = function(id) {
-  if (lastPressed == "operator") {
+  if (lastPressed == "operator" || lastPressed == "result") {
     parseClear("CE");
   }
   // Handle the original zero
@@ -153,7 +157,9 @@ var parsePlusmn = function() {
 var parseOperator = function(id) {
   clearTrailingZeroes();
   if (lastPressed == "operator") {
-    // Operator stored
+    // Possible cumulative operator
+
+    if (operator.slice(-3) == id) // In case it's already the
 
   } else {
     if (firstOperand == "") {
@@ -169,13 +175,31 @@ var parseOperator = function(id) {
   }
   lastPressed = "operator";
 }
+
+var parseEqual = function() {
+  switch (lastPressed) {
+    case "digit":
+    case ".":
+      if (operator != "") {
+        $screenText.text(calculate());
+      }
+      break;
+  }
+  clearTrailingZeroes();
+  if (operator[0] != 2) {
+    // Only forget if it's not a double operator
+    operator = "";
+    firstOperand = $screenText.text();
+  }
+  lastPressed = "result";
+}
 //////////End of parsing functions
 
 // Process operands and operator
 var calculate = function() {
   var secondOperand = $screenText.text();
   var opFn;
-  switch (operator) {
+  switch (operator.slice(-3)) { // Takes into account double operator
     case "plu":
     opFn = function (lhs, rhs) {return lhs + rhs};
     break;
@@ -203,7 +227,7 @@ var resultToText = function(value) {
       text = "E";
     } else if (isFinite(value)) {
       // Finite but too big
-      text = parseFloat(Math.abs(value));
+      text = "" + Math.abs(value);
       text = text.slice(0, 1) + "." + text.slice(1, 7) + "E";
     } else {
       // Infinity
