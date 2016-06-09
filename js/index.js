@@ -18,7 +18,7 @@ var previousKey = "", // Prevent keyboard repeat
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
-    lastPressed = "", // Values can be "digit", ".", "operator", "result"
+    lastPressed = "", // Values can be "digit", "operator", "result"
     isOverflow = false,
     memory = 0;
 
@@ -66,7 +66,7 @@ $.fn.processInput = function() {
   var buttonId = this.attr("id");
   // Parse CE and C
   if (this.hasClass('clear')) {
-    parseClear("CA");
+    parseClear(buttonId);
     return;
   }
   if (!isOverflow) {
@@ -115,21 +115,14 @@ var parseClear = function(id) {
   isOverflow = false;
 }
 
-var parseCA = function() {
-  $screenText.text("0");
-  firstOperand = "";
-  lastPressed = "";
-}
-
 var parseDot = function() {
   if (lastPressed == "operator") {
     parseClear("CE");
   }
   if ($screenText.text().indexOf('.') == -1) {
     $screenText.append('.');
-    operator = "";
   }
-  lastPressed = ".";
+  lastPressed = "digit";
 }
 
 var parseDigit = function(id) {
@@ -150,8 +143,7 @@ var parsePlusmn = function() {
   if (lastPressed == "operator") {
     parseClear("CE");
   }
-  clearTrailingZeroes();
-  var screenText = $screenText.text();
+  var screenText = clearTrailingZeroes($screenText.text());
   if (parseFloat(screenText) !== 0) {
     if (screenText.slice(0, 1) == "-") {
       $screenText.text(screenText.slice(1));
@@ -163,7 +155,7 @@ var parsePlusmn = function() {
 }
 
 var parseOperator = function(id) {
-  clearTrailingZeroes();
+  $screenText.text(clearTrailingZeroes($screenText.text()));
   if (lastPressed == "operator") {
     // Possible repeat operation
     if (operator.slice(-3) == id) { // In case it's already the repeat
@@ -179,7 +171,6 @@ var parseOperator = function(id) {
     } else {
       // More than one operation - Calculate
       $screenText.text(calculate());
-      clearTrailingZeroes();
       firstOperand = $screenText.text();
     }
     operator = id;
@@ -197,11 +188,12 @@ var parseEqual = function() {
       break;
     case "result":
       if (operator[0] == "2"){
-        // Repeat operationot
+        // Repeat operation
         $screenText.text(calculate());
       }
+    default:
+      $screenText.text(clearTrailingZeroes($screenText.text()));
   }
-  clearTrailingZeroes();
   if (operator[0] != 2) {
     // Only forget if it's not a double operator
     operator = "";
@@ -229,7 +221,6 @@ var parseMemory = function(id) {
     case "MR":
       parseClear("CA");
       $screenText.text(resultToText(memory));
-      clearTrailingZeroes();
       break;
   }
   lastPressed = "result";
@@ -243,7 +234,6 @@ var parsePercent = function() {
     value = value * 0.01 * parseFloat(firstOperand);
   }
   $screenText.text(resultToText(value));
-  clearTrailingZeroes();
   lastPressed = "digit";
 }
 //////////End of parsing functions
@@ -302,27 +292,28 @@ var resultToText = function(value) {
     }
   } else {
     // OK value - Trim extra digits
-    var nDecimals = 7 - Math.floor(Math.log10(Math.abs(value)));
-    text = "" + Math.round(value * Math.pow(10, nDecimals));
-    // Add the dot
-    if (nDecimals > 0) {
-      text = text.slice(0, -nDecimals) + "." + text.slice(-nDecimals);
+    text = value.toString();
+    // We know that if the text is too long, we have a "." (otherwise overflow)
+    if (text.length > 9 + (value < 0)) {
+      var splitText = text.split(".");
+      var multiplier = Math.pow(10, 8 - (splitText[0].length - (value < 0)));
+      value = Math.round(value * multiplier) / multiplier;
+      text = value.toString();
+    }
+  }
+  return clearTrailingZeroes(text);
+}
+
+var clearTrailingZeroes = function(text) {
+  if (text.indexOf('.') != -1) {
+    while (text.slice(-1) == "0") {
+      text = text.slice(0, -1);
+    }
+    if (text.slice(-1) == ".") {
+      text = text.slice(0, -1);
     }
   }
   return text;
-}
-
-var clearTrailingZeroes = function() {
-  if ($screenText.text().indexOf('.') != -1) {
-    var screenText = $screenText.text();
-    while (screenText.slice(-1) == "0") {
-      screenText = screenText.slice(0, -1);
-    }
-    if (screenText.slice(-1) == ".") {
-      screenText = screenText.slice(0, -1);
-    }
-    $screenText.text(screenText);
-  }
 }
 
 var checkForOverflow = function(value) {
