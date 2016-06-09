@@ -18,7 +18,8 @@ var previousKey = "", // Prevent keyboard repeat
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
-    lastPressed = "";
+    lastPressed = "",
+    isOverflow = false;
 
 
 // Keyboard handler
@@ -62,43 +63,44 @@ $.fn.blink = function() {
 
 // Main input handler
 $.fn.processInput = function() {
-  // Parse decimal dot
-  if (this.hasClass('dot')) {
-    parseDot();
-    return;
-  }
-  // Parse sign change
-  if (this.hasClass('plusmn')) {
-    parsePlusmn();
-    return;
-  }
   var buttonId = this.attr("id");
   // Parse CE and C
   if (this.hasClass('clear')) {
     parseClear(buttonId);
     return;
   }
-  // Parse digits
-  if (this.hasClass('digit')) {
-    parseDigit(buttonId);
-    return;
-  }
-  if (this.hasClass('operator')) {
-    parseOperator(buttonId);
-    return;
+  if (!isOverflow) {
+    // Parse decimal dot
+    if (this.hasClass('dot')) {
+      parseDot();
+      return;
+    }
+    // Parse sign change
+    if (this.hasClass('plusmn')) {
+      parsePlusmn();
+      return;
+    }
+    // Parse digits
+    if (this.hasClass('digit')) {
+      parseDigit(buttonId);
+      return;
+    }
+    if (this.hasClass('operator')) {
+      parseOperator(buttonId);
+      return;
+    }
   }
 }
 
 ////////////Parsing functions///////////////////
 var parseClear = function(id) {
   $screenText.text("0");
-  if (id == "CE") {
-    lastPressed = operator; // Allows for double operator action
-  } else {
+  if (id == "CA" || isOverflow) {
     operator = "";
     firstOperand = "";
     lastPressed = "";
   }
+  isOverflow = false;
 }
 
 var parseCA = function() {
@@ -109,6 +111,9 @@ var parseCA = function() {
 }
 
 var parseDot = function() {
+  if (lastPressed == "operator") {
+    parseClear("CE");
+  }
   if ($screenText.text().indexOf('.') == -1) {
     $screenText.append('.');
   }
@@ -116,6 +121,9 @@ var parseDot = function() {
 }
 
 var parseDigit = function(id) {
+  if (lastPressed == "operator") {
+    parseClear("CE");
+  }
   // Handle the original zero
   if ($screenText.text() == "0") {
     $screenText.text(id.slice(-1));
@@ -127,8 +135,12 @@ var parseDigit = function(id) {
 }
 
 var parsePlusmn = function() {
+  if (lastPressed == "operator") {
+    parseClear("CE");
+  }
+  clearTrailingZeroes();
   var screenText = $screenText.text();
-  if (screenText != "0") {
+  if (parseFloat(screenText) !== 0) {
     if (screenText.slice(0, 1) == "-") {
       $screenText.text(screenText.slice(1));
     } else {
@@ -139,26 +151,92 @@ var parsePlusmn = function() {
 }
 
 var parseOperator = function(id) {
-  if (operator == id) {
-    // Double operator action
-    operator = "2" + operator;
-  } else {
-    // TODO: Progress operation - Could be that operation has to be executed
-  }
-
   clearTrailingZeroes();
+  if (lastPressed == "operator") {
+    // Operator stored
+
+  } else {
+    if (firstOperand == "") {
+      //  First operation - No operand
+      firstOperand = $screenText.text();
+    } else {
+      // More than one operation - Calculate
+      $screenText.text(calculate());
+      clearTrailingZeroes();
+      firstOperand = $screenText.text();
+    }
+    operator = id;
+  }
   lastPressed = "operator";
 }
 //////////End of parsing functions
 
+// Process operands and operator
+var calculate = function() {
+  var secondOperand = $screenText.text();
+  var opFn;
+  switch (operator) {
+    case "plu":
+    opFn = function (lhs, rhs) {return lhs + rhs};
+    break;
+    case "min":
+    opFn = function (lhs, rhs) {return lhs - rhs};
+    break;
+    case "mul":
+    opFn = function (lhs, rhs) {return lhs * rhs};
+    break;
+    case "div":
+    opFn = function (lhs, rhs) {return lhs / rhs}
+    break;
+  }
+  var result = opFn(parseFloat(firstOperand), parseFloat(secondOperand));
+  checkForOverflow(result);
+  return resultToText(result);
+}
+
+// Convert result to text and deals with overflow
+var resultToText = function(value) {
+  var text = "";
+  if (isOverflow) {
+    // Handle NaN
+    if (isNaN(value)) {
+      text = "E";
+    } else if (isFinite(value)) {
+      // Finite but too big
+      text = parseFloat(Math.abs(value));
+      text = text.slice(0, 1) + "." + text.slice(1, 7) + "E";
+    } else {
+      // Infinity
+      text = "9.999999E";
+    }
+    if (value < 0) {
+      text = "-" + text;
+    }
+  } else {
+    // OK value - Trim extra digits
+    var nDecimals = 7 - Math.floor(Math.log10(Math.abs(value)));
+    text = "" + Math.round(value * Math.pow(10, nDecimals));
+    // Add the dot
+    text = text.slice(0, -nDecimals) + "." + text.slice(-nDecimals);
+  }
+  return text;
+}
+
 var clearTrailingZeroes = function() {
   if ($screenText.text().indexOf('.') != -1) {
     var screenText = $screenText.text();
-    while(screenText.slice(-1) == "0") {
+    while (screenText.slice(-1) == "0") {
+      screenText = screenText.slice(0, -1);
+    }
+    if (screenText.slice(-1) == ".") {
       screenText = screenText.slice(0, -1);
     }
     $screenText.text(screenText);
   }
+}
+
+var checkForOverflow = function(value) {
+  isOverflow = (value > 99999999 || value < -99999999 || isNaN(value));
 }
 
 // Returns the ID of the element called by the keyboard shortcut
