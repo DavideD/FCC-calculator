@@ -157,13 +157,16 @@ var parsePlusmn = function() {
 var parseOperator = function(id) {
   clearTrailingZeroes();
   if (lastPressed == "operator") {
-    // Possible cumulative operator
-
-    if (operator.slice(-3) == id) // In case it's already the
-
+    // Possible repeat operation
+    if (operator.slice(-3) == id) { // In case it's already the repeat
+      operator = "2" + id;
+    } else {
+      // We've just changed the operator
+      operator = id;
+    }
   } else {
-    if (firstOperand == "") {
-      //  First operation - No operand
+    if (firstOperand == "" || operator[0] == "2") {
+      //  First operation or clear repeat operation
       firstOperand = $screenText.text();
     } else {
       // More than one operation - Calculate
@@ -189,7 +192,7 @@ var parseEqual = function() {
   if (operator[0] != 2) {
     // Only forget if it's not a double operator
     operator = "";
-    firstOperand = $screenText.text();
+    firstOperand = "";
   }
   lastPressed = "result";
 }
@@ -241,7 +244,9 @@ var resultToText = function(value) {
     var nDecimals = 7 - Math.floor(Math.log10(Math.abs(value)));
     text = "" + Math.round(value * Math.pow(10, nDecimals));
     // Add the dot
-    text = text.slice(0, -nDecimals) + "." + text.slice(-nDecimals);
+    if (nDecimals > 0) {
+      text = text.slice(0, -nDecimals) + "." + text.slice(-nDecimals);
+    }
   }
   return text;
 }
