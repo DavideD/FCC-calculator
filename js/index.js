@@ -15,6 +15,7 @@ var previousKey = "", // Prevent keyboard repeat
                   "/": "div", "*": "mul", "-": "min", "+": "plu",
                   ".": "dot",
                   "=": "equal", "Enter": "equal"},
+    displaySize = 8,
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
@@ -160,9 +161,13 @@ var parseOperator = function(id) {
     // Possible repeat operation
     if (operator.slice(-3) == id) { // In case it's already the repeat
       operator = "2" + id;
+      firstOperand = $screenText.text();
+      $screenText.text(calculate());
+      lastPressed = "result";
     } else {
       // We've just changed the operator
       operator = id;
+      lastPressed = "operator";
     }
   } else {
     if (firstOperand == "" || operator[0] == "2") {
@@ -174,15 +179,17 @@ var parseOperator = function(id) {
       firstOperand = $screenText.text();
     }
     operator = id;
+    lastPressed = "operator";
   }
-  lastPressed = "operator";
 }
 
 var parseEqual = function() {
   switch (lastPressed) {
     case "digit":
     case ".":
-      if (operator != "") {
+      if (operator == "") {
+        $screenText.text(clearTrailingZeroes($screenText.text()));
+      } else {
         $screenText.text(calculate());
       }
       break;
@@ -292,14 +299,8 @@ var resultToText = function(value) {
     }
   } else {
     // OK value - Trim extra digits
-    text = value.toString();
-    // We know that if the text is too long, we have a "." (otherwise overflow)
-    if (text.length > 9 + (value < 0)) {
-      var splitText = text.split(".");
-      var multiplier = Math.pow(10, 8 - (splitText[0].length - (value < 0)));
-      value = Math.round(value * multiplier) / multiplier;
-      text = value.toString();
-    }
+    var nDecimals = Math.min(displaySize - Math.log10(Math.abs(value)), 7);
+    text = value.toFixed(nDecimals);
   }
   return clearTrailingZeroes(text);
 }
