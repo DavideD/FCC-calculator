@@ -11,118 +11,124 @@
 <body>
 
   <!-- This is the beginning of the HTML for the FCC calculator-->
-<div>
-<div class="calculator-wrapper">
-  <div class="calculator">
-    <div class="branding"><div class="brand">FCC</div><div class="description">Electronic calculator</div><div class="model">HAL-42</div></div>
-    <div class="screen-frame">
-    <div class="screen">
-      <div class="screen-background">-8.8.8.8.8.8.8.8.</div>
-      <div class="screen-text">0</div>
-      <div class="memory-sign-background">M</div>
-      <div class="memory-sign">M</div>
+  <div class="document">
+    <div class="calculator-wrapper">
+      <div class="calculator">
+        <div class="branding">
+          <div class="brand">FCC</div>
+          <div class="description">Electronic calculator</div>
+          <div class="model">HAL-42</div>
+        </div>
+        <div class="screen-frame">
+          <div class="screen">
+            <div class="screen-background">-8.8.8.8.8.8.8.8.</div>
+            <div class="screen-text">0</div>
+            <div class="memory-sign-background">M</div>
+            <div class="memory-sign">M</div>
+          </div>
+        </div>
+        <div class="buttons">
+          <table class="top-row">
+            <tr>
+              <td>
+                <div class="button small memory" id="MRC">MRC</div>
+              </td>
+              <td>
+                <div class="button small memory" id="Mplu">M+</div>
+              </td>
+              <td>
+                <div class="button small memory" id="Mmin">M-</div>
+              </td>
+              <td>
+                <div class="button small sqrt" id="sqrt">&radic;</div>
+              </td>
+              <td>
+                <div class="button small off" id="OFF">OFF</div>
+              </td>
+            </tr>
+          </table>
+          <table class="other-rows">
+            <tr>
+              <td>
+                <div class="button red clear on" id="AC">AC</div>
+              </td>
+              <td>
+                <div class="button red clear" id="CE">C</div>
+              </td>
+              <td>
+                <div class="button percent" id="percent">%</div>
+              </td>
+              <td>
+                <div class="button plusmn" id="plusmn">&plusmn;</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="button digit" id="d7">7</div>
+              </td>
+              <td>
+                <div class="button digit" id="d8">8</div>
+              </td>
+              <td>
+                <div class="button digit" id="d9">9</div>
+              </td>
+              <td>
+                <div class="button operator" id="div">/</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="button digit" id="d4">4</div>
+              </td>
+              <td>
+                <div class="button digit" id="d5">5</div>
+              </td>
+              <td>
+                <div class="button digit" id="d6">6</div>
+              </td>
+              <td>
+                <div class="button operator" id="mul">&times;</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="button digit" id="d1">1</div>
+              </td>
+              <td>
+                <div class="button digit" id="d2">2</div>
+              </td>
+              <td>
+                <div class="button digit" id="d3">3</div>
+              </td>
+              <td>
+                <div class="button operator" id="min">&ndash;</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="button digit" id="d0">0</div>
+              </td>
+              <td>
+                <div class="button dot" id="dot">.</div>
+              </td>
+              <td>
+                <div class="button equal" id="equal">=</div>
+              </td>
+              <td>
+                <div class="button operator" id="plu">+</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div><div class="text-wrapper">
+      <div class="text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pharetra eu tortor vel sollicitudin. Phasellus volutpat ante sagittis porta convallis. Vestibulum vel justo ante. Duis vehicula efficitur orci. Integer eu tempor elit. Nam vitae quam ac sem
+        pellentesque mollis. Etiam imperdiet erat quis feugiat dignissim. Etiam porttitor id ante non laoreet. Pellentesque consectetur euismod felis, et malesuada velit euismod vel. Nam fermentum sapien non enim consectetur, eu blandit sem cursus. Nullam
+        magna magna, interdum ac turpis at, rutrum fermentum odio. Suspendisse quis felis vitae massa varius cursus.
+      </div>
     </div>
   </div>
-    <div class="buttons">
-      <table class="top-row">
-        <tr>
-          <td>
-            <div class="button small memory" id="MRC">MRC</div>
-          </td>
-          <td>
-            <div class="button small memory" id="Mplu">M+</div>
-          </td>
-          <td>
-            <div class="button small memory" id="Mmin">M-</div>
-          </td>
-          <td>
-            <div class="button small sqrt" id="sqrt">&radic;</div>
-          </td>
-          <td>
-            <div class="button small off" id="OFF">OFF</div>
-          </td>
-        </tr>
-      </table>
-      <table class="other-rows">
-        <tr>
-          <td>
-            <div class="button red clear on" id="AC">AC</div>
-          </td>
-          <td>
-            <div class="button red clear" id="CE">C</div>
-          </td>
-          <td>
-            <div class="button percent" id="percent">%</div>
-          </td>
-          <td>
-            <div class="button plusmn" id="plusmn">&plusmn;</div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="button digit" id="d7">7</div>
-          </td>
-          <td>
-            <div class="button digit" id="d8">8</div>
-          </td>
-          <td>
-            <div class="button digit" id="d9">9</div>
-          </td>
-          <td>
-            <div class="button operator" id="div">/</div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="button digit" id="d4">4</div>
-          </td>
-          <td>
-            <div class="button digit" id="d5">5</div>
-          </td>
-          <td>
-            <div class="button digit" id="d6">6</div>
-          </td>
-          <td>
-            <div class="button operator" id="mul">&times;</div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="button digit" id="d1">1</div>
-          </td>
-          <td>
-            <div class="button digit" id="d2">2</div>
-          </td>
-          <td>
-            <div class="button digit" id="d3">3</div>
-          </td>
-          <td>
-            <div class="button operator" id="min">&ndash;</div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="button digit" id="d0">0</div>
-          </td>
-          <td>
-            <div class="button dot" id="dot">.</div>
-          </td>
-          <td>
-            <div class="button equal" id="equal">=</div>
-          </td>
-          <td>
-            <div class="button operator" id="plu">+</div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </div>
-</div><div class="text-wrapper">
-  <div class="text">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pharetra eu tortor vel sollicitudin. Phasellus volutpat ante sagittis porta convallis. Vestibulum vel justo ante. Duis vehicula efficitur orci. Integer eu tempor elit. Nam vitae quam ac sem pellentesque mollis. Etiam imperdiet erat quis feugiat dignissim. Etiam porttitor id ante non laoreet. Pellentesque consectetur euismod felis, et malesuada velit euismod vel. Nam fermentum sapien non enim consectetur, eu blandit sem cursus. Nullam magna magna, interdum ac turpis at, rutrum fermentum odio. Suspendisse quis felis vitae massa varius cursus.
-  </div>
-</div>
-</div>
   <!-- This is the end of the HTML for the FCC calculator-->
   <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
   <script src="js/index.js"></script>
