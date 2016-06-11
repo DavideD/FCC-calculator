@@ -2,30 +2,191 @@
 /* Font from http://www.keshikan.net/fonts-e.html */
 @font-face {
   font-family: 'Segments';
-  src: url('/font/DSEG7Classic-Italic.woff');
+  src: url('/font/DSEG7ClassicMini-Italic.woff');
+}
+
+.calculator-wrapper {
+  display: inline-block;
+  height: 685px;
+  margin: 50px;
+  vertical-align: top;
+  width: 475px;
+}
+
+.text-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  width : 475px;
+}
+
+.calculator {
+  background-color: #445565;
+  border-radius: 10%;
+  box-shadow: ;
+  display: inline-block;
+  margin: 50px;
+  margin-right: auto;
+  width: 375px;
+}
+
+.text {
+  margin: 50px;
+  display: inline-block;
+}
+
+.branding {
+  color: #b9c3c9;
+  font-family: sans-serif;
+  height: 105px;
+  padding-top: 14px;
+  text-align: center;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight:900;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 20px;
+  text-transform: uppercase;
+}
+
+.model {
+  font-size: 14px;
+  font-weight: 900;
+  margin-top: 3px;
+}
+
+.screen-frame {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 30%;
+  border-bottom-left-radius: 30%;
+  border: solid 2px #26343c;
+  height: 110px;
+  margin: 0 auto;
+  width: 320px;
+}
+
+.screen {
+  background-color: #aacfb8;
+  border-radius: 5px;
+  position: relative;
+  height: 75px;
+  width: 250px;
+  margin: 13px auto auto auto;
+  font-size: 32px;
+}
+
+/* Common properties for overlay */
+.screen-background,
+.screen-text {
+  font-family: 'Segments', Fallback, monospace;
+  position: absolute;
+  top: 25px;
+  right: 10px;
+}
+
+.screen-background {
+  color: black;
+  opacity: 0.15;
+}
+
+.screen-text {
+  color: black;
+  visibility: hidden;
+}
+
+/* Common properties for overlay */
+.memory-sign-background,
+.memory-sign {
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 100%;
+  position: absolute;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.memory-sign-background {
+  visibility: visible;
+  opacity: 0.15;
+}
+
+.memory-sign {
+  visibility: hidden;
+}
+
+td,
+tr,
+table {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.top-row {
+  width: 100%;
+}
+
+.other-rows {
+  width: 100%;
+}
+
+.buttons {
+  margin: 20px 30px 15px 30px;
 }
 
 .button {
-  position: relative;
+  border-radius: 7px;
+  font-family: sans-serif;
+  background-color: #0a2637;
+  color: #cddde3;
   display: inline-block;
-  padding: 10px;
-  margin: 10px;
-  border: solid black 1px;
-  width: 4ch;
+  height: 35px;
+  font-weight: bold;
+  font-size: 25px;
+  line-height: 35px;
+  margin-bottom: 15px;
+  position: relative;
+  text-align: center;
+  width: 55px;
+}
+
+.button.small {
+  font-size: 18px;
+  height: 38px;
+  line-height: 38px;
+  margin-bottom: 16px;
+  width: 50px;
+}
+
+.button.red {
+  background-color: #d42828;
 }
 
 .button:hover {
-  color: white;
-  background-color: black;
+  opacity: 0.8;
 }
 
 .tooltip {
-  visibility: hidden;
-  background-color: red;
+  font-size: 8px;
+  line-height: 100%;
   position: absolute;
+  right: 2px;
+  bottom: 2px;
+  visibility: hidden;
   z-index: 1;
-  right: 0;
-  top: 0;
+}
+.button:hover {
+  cursor: pointer;
 }
 
 .button:hover .tooltip {
@@ -33,61 +194,7 @@
 }
 
 .active,
-.button:active {
-  color: white;
-  background-color: grey;
-}
-
-.screen {
-  position: relative;
-  border: solid black 1px;
-  height: 2em;
-  width: 310px;
-  margin: 10px;
-  line-height: 2em;
-  font-size: 36px;
-}
-
-.screen-background {
-  font-family: 'Segments', Fallback, monospace;
-  position: absolute;
-  right: 10px;
-  color: black;
-  opacity: 0.15;
-}
-
-.screen-text {
-  font-family: 'Segments', Fallback, monospace;
-  visibility: hidden;
-  position: absolute;
-  right: 10px;
-  color: black
-}
-
-.memory-sign-background {
-  font-family: sans-serif;
-  position: absolute;
-  line-height: 100%;
-  font-size: 15px;
-  font-weight: bold;
-  visibility: visible;
-  position: absolute;
-  right: 10px;
-  opacity: 0.15;
-}
-
-.memory-sign {
-  font-family: sans-serif;
-  position: absolute;
-  line-height: 100%;
-  font-size: 15px;
-  font-weight: bold;
-  visibility: hidden;
-  position: absolute;
-  right: 10px;
-}
-
-td {
-  margin: 0;
-  padding: 0;
+.button:active,
+.button.small:active {
+  opacity: 0.5;
 }
