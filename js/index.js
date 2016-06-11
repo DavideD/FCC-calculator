@@ -20,7 +20,7 @@ var previousKey = "", // Prevent keyboard repeat
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
-    lastPressed = "", // Values can be "digit", "operator", "result", "MRC"
+    lastPressed = "", // Values can be "digit", "operator", "result", "MRC", "unary"
     isOverflow = false,
     memory = 0,
     isOn = false;
@@ -137,7 +137,7 @@ var parseClear = function(id) {
 }
 
 var parseDot = function() {
-  if (lastPressed == "operator") {
+  if (lastPressed == "operator" || lastPressed == "unary") {
     parseClear("CE");
   }
   if ($screenText.text().indexOf('.') == -1) {
@@ -147,8 +147,11 @@ var parseDot = function() {
 }
 
 var parseDigit = function(id) {
-  if (lastPressed == "operator" || lastPressed == "result" || lastPressed == "MRC") {
+  if (lastPressed == "operator") {
     parseClear("CE");
+  }
+  if (lastPressed == "result" || lastPressed == "MRC" || lastPressed == "unary") {
+    parseClear("AC");
   }
   // Handle the original zero
   if ($screenText.text() == "0") {
@@ -162,7 +165,7 @@ var parseDigit = function(id) {
 
 var parsePlusmn = function() {
   if (lastPressed == "operator") {
-    parseClear("CE");
+    operator = "";
   }
   var screenText = clearTrailingZeroes($screenText.text());
   if (parseFloat(screenText) !== 0) {
@@ -207,6 +210,7 @@ var parseEqual = function() {
   switch (lastPressed) {
     case "digit":
     case ".":
+    case "unary":
       if (operator == "") {
         $screenText.text(clearTrailingZeroes($screenText.text()));
       } else {
@@ -218,6 +222,7 @@ var parseEqual = function() {
         // Repeat operation
         $screenText.text(calculate());
       }
+      break;
     default:
       $screenText.text(clearTrailingZeroes($screenText.text()));
   }
@@ -269,12 +274,12 @@ var parsePercent = function() {
     value = value * 0.01 * parseFloat(firstOperand);
   }
   $screenText.text(resultToText(value));
-  lastPressed = "digit";
+  lastPressed = "unary";
 }
 
 var parseSqrt = function() {
   $screenText.text(resultToText(Math.sqrt(parseFloat($screenText.text()))));
-  lastPressed = "digit";
+  lastPressed = "unary";
 }
 
 var parseOff = function() {
