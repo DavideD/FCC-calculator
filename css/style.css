@@ -1,9 +1,6 @@
 /* This is CSS for the FCC calculator */
 /* Font from http://www.keshikan.net/fonts-e.html */
-@font-face {
-  font-family: 'Segments';
-  src: url('/font/DSEG7Classic-Italic.woff');
-}
+@import url(font.css);
 
 body {
   background-color: #674970;
