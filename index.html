@@ -11,17 +11,20 @@
 <body>
 
   <!-- This is the beginning of the HTML for the FCC calculator-->
-  <!-- Using this layout http://www.guidingtech.com/assets/postimages/2013/12/Mac-Calculator-Basic.png-->
+
+<div class="calculator-wrapper">
   <div class="calculator">
     <div class="screen">
       <div class="screen-background">-8.8.8.8.8.8.8.8.</div>
       <div class="screen-text">0</div>
+      <div class="memory-sign-background">M</div>
+      <div class="memory-sign">M</div>
     </div>
     <div class="buttons">
       <table>
         <tr>
           <td>
-            <div class="button memory" id="MC">MC</div>
+            <div class="button memory" id="MRC">MRC</div>
           </td>
           <td>
             <div class="button memory" id="Mplu">M+</div>
@@ -30,15 +33,18 @@
             <div class="button memory" id="Mmin">M-</div>
           </td>
           <td>
-            <div class="button memory" id="MR">MR</div>
+            <div class="button sqrt" id="sqrt">&radic;</div>
+          </td>
+          <td>
+            <div class="button off" id="OFF">OFF</div>
           </td>
         </tr>
         <tr>
           <td>
-            <div class="button clear" id="CE">CE</div>
+            <div class="button clear on" id="AC">AC</div>
           </td>
           <td>
-            <div class="button clear" id="CA">C</div>
+            <div class="button clear" id="CE">C</div>
           </td>
           <td>
             <div class="button percent" id="percent">%</div>
@@ -106,6 +112,11 @@
       </table>
     </div>
   </div>
+</div>
+<div class="text-wrapper">
+  <div class="text">
+  </div>
+</div>
 
   <!-- This is the end of the HTML for the FCC calculator-->
   <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>

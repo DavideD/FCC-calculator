@@ -39,7 +39,6 @@
 }
 
 .screen {
-  font-family: 'Segments', Fallback, monospace;
   position: relative;
   border: solid black 1px;
   height: 2em;
@@ -50,16 +49,42 @@
 }
 
 .screen-background {
+  font-family: 'Segments', Fallback, monospace;
   position: absolute;
   right: 10px;
   color: black;
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
 .screen-text {
+  font-family: 'Segments', Fallback, monospace;
+  visibility: hidden;
   position: absolute;
   right: 10px;
   color: black
+}
+
+.memory-sign-background {
+  font-family: sans-serif;
+  position: absolute;
+  line-height: 100%;
+  font-size: 15px;
+  font-weight: bold;
+  visibility: visible;
+  position: absolute;
+  right: 10px;
+  opacity: 0.15;
+}
+
+.memory-sign {
+  font-family: sans-serif;
+  position: absolute;
+  line-height: 100%;
+  font-size: 15px;
+  font-weight: bold;
+  visibility: hidden;
+  position: absolute;
+  right: 10px;
 }
 
 td {

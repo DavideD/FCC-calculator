@@ -2,12 +2,13 @@
 'use strict';
 
 var previousKey = "", // Prevent keyboard repeat
-    keyIdTable = {"q": "MC", "Q": "MC",
+    keyIdTable = {"q": "MRC", "Q": "MRC",
                   "w": "Mplu", "W": "Mplu",
                   "e": "Mmin", "E": "Mmin",
-                  "r": "MR", "R": "MR",
+                  "r": "sqrt", "R": "sqrt",
+                  "o": "OFF", "O": "OFF",
                   "Delete": "CE", "Backspace": "CE",
-                  "Escape": "CA",
+                  "Escape": "AC",
                   "%": "percent",
                   "n": "plusmn", "N": "plusmn",
                   "0": "d0", "1": "d1", "2": "d2", "3": "d3", "4": "d4",
@@ -19,9 +20,10 @@ var previousKey = "", // Prevent keyboard repeat
     $screenText = $(".screen-text"),
     operator = "",
     firstOperand = "",
-    lastPressed = "", // Values can be "digit", "operator", "result"
+    lastPressed = "", // Values can be "digit", "operator", "result", "MRC"
     isOverflow = false,
-    memory = 0;
+    memory = 0,
+    isOn = false;
 
 // Keyboard handler
 $(document).keydown(function(event) {
@@ -65,12 +67,16 @@ $.fn.blink = function() {
 // Main input handler
 $.fn.processInput = function() {
   var buttonId = this.attr("id");
+  // Block all entries if off
+  if (!isOn && !this.hasClass('on')){
+    return;
+  }
   // Parse CE and C
   if (this.hasClass('clear')) {
     parseClear(buttonId);
     return;
   }
-  if (!isOverflow) {
+  if (!isOverflow && isOn) {
     // Parse decimal dot
     if (this.hasClass('dot')) {
       parseDot();
@@ -102,16 +108,30 @@ $.fn.processInput = function() {
       parsePercent();
       return;
     }
+    if (this.hasClass('sqrt')) {
+      parseSqrt();
+      return;
+    }
+    if (this.hasClass('off')) {
+      parseOff();
+      return;
+    }
   }
 }
 
 ////////////Parsing functions///////////////////
 var parseClear = function(id) {
   $screenText.text("0");
-  if (id == "CA") {
-    operator = "";
-    firstOperand = "";
-    lastPressed = "";
+  if (id == "AC") {
+    if (isOn) {
+      operator = "";
+      firstOperand = "";
+      lastPressed = "";
+    } else {
+      // Turn on
+      isOn = true;
+      $screenText.css({"visibility": "visible"});
+    }
   }
   isOverflow = false;
 }
@@ -127,7 +147,7 @@ var parseDot = function() {
 }
 
 var parseDigit = function(id) {
-  if (lastPressed == "operator" || lastPressed == "result") {
+  if (lastPressed == "operator" || lastPressed == "result" || lastPressed == "MRC") {
     parseClear("CE");
   }
   // Handle the original zero
@@ -211,9 +231,6 @@ var parseEqual = function() {
 
 var parseMemory = function(id) {
   switch (id) {
-    case "MC":
-      memory = 0;
-      break;
     case "Mplu":
     case "Mmin":
       var newVal = operatorFn(id.slice(-3))(memory,
@@ -224,13 +241,24 @@ var parseMemory = function(id) {
       } else {
         memory = newVal;
       }
+      lastPressed = "result";
       break;
-    case "MR":
-      parseClear("CA");
-      $screenText.text(resultToText(memory));
+    case "MRC":
+      if (lastPressed == "MRC") {
+        memory = 0;
+        lastPressed = "result";
+      } else {
+        parseClear("AC");
+        $screenText.text(resultToText(memory));
+        lastPressed = "MRC";
+      }
       break;
   }
-  lastPressed = "result";
+  if (memory === 0) {
+    $(".memory-sign").css({"visibility": "hidden"});
+  } else {
+    $(".memory-sign").css({"visibility": "visible"});
+  }
 }
 
 var parsePercent = function() {
@@ -242,6 +270,22 @@ var parsePercent = function() {
   }
   $screenText.text(resultToText(value));
   lastPressed = "digit";
+}
+
+var parseSqrt = function() {
+  $screenText.text(resultToText(Math.sqrt(parseFloat($screenText.text()))));
+  lastPressed = "digit";
+}
+
+var parseOff = function() {
+  $screenText.css({"visibility": "hidden"});
+  $screenText.text("");
+  operator = "";
+  firstOperand = "";
+  lastPressed = "";
+  isOverflow = false;
+  memory = 0;
+  isOn = false;
 }
 //////////End of parsing functions
 
