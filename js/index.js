@@ -137,7 +137,7 @@ var parseClear = function(id) {
 }
 
 var parseDot = function() {
-  if (lastPressed == "operator" || lastPressed == "unary") {
+  if (lastPressed != "digit") {
     parseClear("CE");
   }
   if ($screenText.text().indexOf('.') == -1) {
