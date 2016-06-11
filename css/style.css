@@ -2,10 +2,13 @@
 /* Font from http://www.keshikan.net/fonts-e.html */
 @font-face {
   font-family: 'Segments';
-  src: url('/font/DSEG7ClassicMini-Italic.woff');
+  src: url('/font/DSEG7Classic-Italic.woff');
 }
 
 body {
+  background-color: #674970;
+  color: #dbe9ee;
+  font-family: sans-serif;;
   margin: 10px 0 0 0;
   padding: 0;
 }
@@ -40,6 +43,7 @@ body {
 
 .calculator {
   background-color: #445565;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 10px 24px 0 rgba(0, 0, 0, 0.19);
   border-radius: 10%;
   margin: auto;
   width: 375px;
@@ -49,6 +53,27 @@ body {
   margin: auto;
   padding-top: 50px;
   width: 375px;
+  font-size: 16px;
+}
+
+.text h1 {
+  margin-top: 0;
+}
+
+.text p,
+.text li {
+  line-height: 1.4em;
+  padding-bottom: 5px;
+}
+
+.text a {
+  color: inherit;
+}
+
+.text code {
+  border-radius: 3px;
+  padding: 0 3px;
+  background-color: rgba(255, 255, 255, 0.11);
 }
 
 .branding {
@@ -123,6 +148,7 @@ body {
 /* Common properties for overlay */
 .memory-sign-background,
 .memory-sign {
+  color: black;
   font-family: sans-serif;
   font-size: 15px;
   font-weight: bold;
