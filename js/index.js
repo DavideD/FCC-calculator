@@ -147,10 +147,9 @@ var parseDot = function() {
 }
 
 var parseDigit = function(id) {
-  if (lastPressed == "operator") {
+  if (lastPressed == "operator" || (lastPressed == "result" && operator[0] == 2)) {
     parseClear("CE");
-  }
-  if (lastPressed == "result" || lastPressed == "MRC" || lastPressed == "unary") {
+  } else if (lastPressed == "result" || lastPressed == "MRC" || lastPressed == "unary") {
     parseClear("AC");
   }
   // Handle the original zero
@@ -186,7 +185,7 @@ var parseOperator = function(id) {
       operator = "2" + id;
       firstOperand = $screenText.text();
       $screenText.text(calculate());
-      lastPressed = "result";
+      lastPressed = "result";
     } else {
       // We've just changed the operator
       operator = id;
@@ -284,6 +283,7 @@ var parseSqrt = function() {
 
 var parseOff = function() {
   $screenText.css({"visibility": "hidden"});
+  $(".memory-sign").css({"visibility": "hidden"});
   $screenText.text("");
   operator = "";
   firstOperand = "";
